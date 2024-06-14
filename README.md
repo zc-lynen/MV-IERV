@@ -10,8 +10,8 @@ pip install -r requirements.txt
 The code is organized as follows:
 * [main.py](./main.py) includes a generic training and testing routine.
 * [IERV.py](./model/IERV.py) includes the implicit network structure.
-* `--dataset`: directory of image dataset of all views
-* `--dataset_basrec`: directory of basic view reconstruction
+* `--dataset` directory of image dataset of all views
+* `--dataset_basrec` directory of basic view reconstruction
 * log files will be saved in output directory (specified by ```--outf```)
 
 
