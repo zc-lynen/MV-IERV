@@ -403,9 +403,13 @@ def evaluate(model, val_dataloader, local_rank, args):
         cur_ckt = model.state_dict()
         quant_weight_list = []
         for k,v in cur_ckt.items():
+            # quantized in training, no need to quantize here
+            '''
             weight = torch.tanh(v)
             quant_v = qfn.apply(weight, args.qbit)
             valid_quant_v = quant_v
+            '''
+            valid_quant_v = torch.floor(v*2**(args.qbit-1))
             quant_weight_list.append(valid_quant_v.flatten())
             # cur_ckt[k] = quant_v
         cat_param = torch.cat(quant_weight_list)
@@ -430,7 +434,7 @@ def evaluate(model, val_dataloader, local_rank, args):
         print_bits = f'total_bits: {total_bits}'
         print(print_str)
         write_str_eval(args.outf, print_str + '\n' + print_bits + '\n')
-        # model.load_state_dict(cur_ckt)
+        model.load_state_dict(cur_ckt)
 
     psnr_list = []
     msssim_list = []

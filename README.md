@@ -70,7 +70,37 @@ python main.py -e 300 --dataset xx --dataset_basrec xx --outf xx \
 
 ## Model Compression Experiments
 
-Coming soon.
+Step1: Train the model without prune and use the parameters: ```--expansion 8 --lower_width 24```
+
+```
+python main.py -e 300 --dataset xx --dataset_basrec xx --outf xx \
+    --fea_hw_dim 9_16_20 --expansion 8 --lower_width 24 --strides 5 3 2 2 2 \
+    --reduction 2 --norm in --act gelu \
+    --view_num xx --frame_perview xx --basic_ind xx --resol 1920 1080 \
+    --warmup 0.2 -b 1 --lr 0.0005 --qbit 8 \
+```
+
+
+Step2: Train the model with prune, based on model of Step1
+```
+python main.py -e 300 --dataset xx --dataset_basrec xx --outf xx \
+    --fea_hw_dim 9_16_20 --expansion 8 --lower_width 24 --strides 5 3 2 2 2 \
+    --reduction 2 --norm in --act gelu \
+    --view_num xx --frame_perview xx --basic_ind xx --resol 1920 1080 \
+    --warmup 0.2 -b 1 --lr 0.0005 --qbit 8 \
+    --weight Step1.pth --prune_ratio 0.4 --not_resume_epoch \
+```
+
+Step3: Evaluating on the pruned model
+```
+python main.py -e 300 --dataset xx --dataset_basrec xx --outf xx \
+    --fea_hw_dim 9_16_20 --expansion 8 --lower_width 24 --strides 5 3 2 2 2 \
+    --reduction 2 --norm in --act gelu \
+    --view_num xx --frame_perview xx --basic_ind xx --resol 1920 1080 \
+    --warmup 0.2 -b 1 --lr 0.0005 --qbit 8 \
+    --weight Step2_pruned.pth --prune_ratio 0.4 \
+    --eval_only \
+```
 
 ## Acknowledgement
 
